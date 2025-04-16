@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Change this!
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_db_password  # Change this!
+    networks:
+      - wordpress_network
+
+  # WordPress Application
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    volumes:
+      - wordpress_data:/var/www/html
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_db_password  # Match with MySQL password above
+      WORDPRESS_DB_NAME: wordpress
+    networks:
+      - wordpress_network
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - wordpress
+    ports:
+      - "80:80"
+      - "443:443"  # For HTTPS if you configure SSL
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl  # For SSL certificates
+    restart: always
+    networks:
+      - wordpress_network
+
+networks:
+  wordpress_network:
+
+volumes:
+  db_data:
+  wordpress_data:
