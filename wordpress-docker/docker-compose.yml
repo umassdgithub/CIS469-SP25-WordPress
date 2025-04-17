@@ -7,7 +7,7 @@ services:
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      RENDER_EXTERNAL_URL: ${RENDER_EXTERNAL_URL}  # set manually or provided by Render
+      RENDER_EXTERNAL_URL: https://cis469-sp25-wordpress.onrender.com # set manually or provided by Render
 
     volumes:
       - db_data:/var/lib/mysql
@@ -18,7 +18,9 @@ services:
     build:
       context: ./Wordpress
       dockerfile: Dockerfile
-    image: yourdockerhubusername/wordpress-custom
+      platforms: 
+        -  linux/amd64
+    image: amir12/wordpress-custom
     depends_on:
       - db
     ports:
