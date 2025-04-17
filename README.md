@@ -38,7 +38,7 @@ After the installation steps, you have to go to PhpMyAdmin and login using the u
 
 After you sign in, you will see the database you created during the installation process.
 
-![PhpMyAdmin](./img/PhpMyAdmin.png)
+![PhpMyAdmin](./img/phpMyAdmin.png)
 
 In phpMyAdmin, you can now edit the site URL from the database settings.
 
