@@ -3,24 +3,17 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      RENDER_EXTERNAL_URL: https://cis469-sp25-wordpress.onrender.com # set manually or provided by Render
-
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - wpnet
 
   wordpress:
-    build:
-      context: ./Wordpress
-      dockerfile: Dockerfile
-      platforms: 
-        -  linux/amd64
-    image: amir12/wordpress-custom
+    image: wordpress:latest
     depends_on:
       - db
     ports:
@@ -31,16 +24,13 @@ services:
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WP_HOME: ${WP_HOME}
-      WP_SITEURL: ${WP_SITEURL}
     volumes:
       - wp_data:/var/www/html
     networks:
       - wpnet
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    platform: linux/amd64
+    platform: linux/amd64  # ← switch from arm64 to amd64
     restart: always
     depends_on:
       - db
@@ -52,6 +42,7 @@ services:
     networks:
       - wpnet
 
+ 
 volumes:
   db_data:
   wp_data:
